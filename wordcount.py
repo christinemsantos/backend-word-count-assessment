@@ -43,6 +43,7 @@ import sys
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
+
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
@@ -52,10 +53,35 @@ import sys
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
 
+def create_dict(filename):
+    word_dict = {}
+    with open(filename, "r") as f:
+        for line in f:
+            for word in line.split():
+                if word.lower() in word_dict:
+                    word_dict[word.lower()] +=1
+                else:
+                    word_dict[word.lower()] = 1
+    return word_dict
+                
+# print (create_dict('alice.txt'))
+
+def print_words(filename):
+    word_dict = create_dict(filename)
+    for word in sorted(word_dict.keys()):
+        print(word + " : " + str(word_dict[word]))
+
+def print_top(filename):
+    word_dict = create_dict(filename)
+    twenty_most_highest = sorted(
+        word_dict.items(), key=lambda t: t[1], reverse=True)
+    for keys, values in twenty_most_highest[:20]:
+        print(keys + " : " + str(values))
+
 
 def main():
     if len(sys.argv) != 3:
-        print 'usage: python wordcount.py {--count | --topcount} file'
+        print('usage: python wordcount.py {--count | --topcount} file')
         sys.exit(1)
 
     option = sys.argv[1]
@@ -65,7 +91,7 @@ def main():
     elif option == '--topcount':
         print_top(filename)
     else:
-        print 'unknown option: ' + option
+        print('unknown option: ' + option)
         sys.exit(1)
 
 
